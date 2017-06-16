@@ -24,12 +24,10 @@ class SightGen:
                    28 --> Highest C ( 2 lines above Treble Clef)
     '''
                    
-    BN = ["c,", "d,", "e,", "f,", "g,", "a,", "b,",
+    TN = ["c,", "d,", "e,", "f,", "g,", "a,", "b,",
         "c", "d", "e", "f", "g", "a", "b",
         "c'", "d'", "e'", "f'", "g'", "a'", "b'",
         "c''", "d''", "e''", "f''", "g''", "a''", "b''"]
-    TN = BN
-                   
 
     FORMAT_GRAND = '''\\version "2.16.2"
     {
@@ -109,12 +107,8 @@ class SightGen:
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description="Generate Random Notes In Lilypond\n"
-                   "(4 ,10) --> Bass Clef "
-                   "(16,24) --> Treble Clef "
-                   "14 --> Middle C\n"
-                   "0  --> Lowest C (2 lines below Bass Clef)\n"
-                   "28 --> Highest C ( 2 lines above Treble Clef)\n"
+    parser = argparse.ArgumentParser(description="Generate Random Notes In Lilypond",
+            formatter_class=argparse.RawTextHelpFormatter
                    )
 
     parser.add_argument('-f', '--format', choices=['Grand','2Treble'], default='Grand')
@@ -123,6 +117,15 @@ if __name__ == "__main__":
     parser.add_argument('-B', '--Bass', nargs=2, type=int, default=(0,4))
     parser.add_argument('-b', '--bar', type=int, default=4)
 
+    parser.epilog='''
+    Generate Random Notes In Lilypond
+                   The position of each notes are index in the list with follwoing reference
+                   0  --> Lowest C (2 lines below Bass Clef) --> C2
+                   14 --> Middle C --> C4
+                   28 --> Highest C ( 2 lines above Treble Clef) --> C6
+                   (4 ,10) --> Bass Clef 
+                   (16,24) --> Treble Clef 
+                   '''
     args = parser.parse_args()
 
     gen = SightGen(format=args.format, tRange=args.Treble, bRange=args.Bass,  notes=args.number,
