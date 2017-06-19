@@ -98,7 +98,7 @@ class SightGen:
                 note = pitch + duration
                 tBarString = tBarString + note + ' '
             tBar.append(tBarString)
-            if int((k+1)/self.barPerLine) == (k+1)/self.barPerLine:
+            if (k+1) % self.barPerLine == 0:
                 tBar.append('\\break')
 
             # generate bass bar
@@ -109,10 +109,10 @@ class SightGen:
                 note = pitch + duration
                 bBarString = bBarString + note + ' '
             bBar.append(bBarString)
-            if int((k+1)/self.barPerLine) == (k+1)/self.barPerLine:
+            if (k+1) % self.barPerLine == 0:
                 bBar.append('\\break')
-        print("tBar: %s" % tBar)
-        print("bBar: %s" % bBar)
+        #print("tBar: %s" % tBar)
+        #print("bBar: %s" % bBar)
         self.tNoteString = ' '.join(tBar)
         self.bNoteString = ' '.join(bBar)
 
