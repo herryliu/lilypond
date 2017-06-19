@@ -29,18 +29,26 @@ class SightGen:
         "c'", "d'", "e'", "f'", "g'", "a'", "b'",
         "c''", "d''", "e''", "f''", "g''", "a''", "b''"]
 
-    R4 = [ ['4', '4', '4','4'],
-           ['1'],
-           ['2', '2'],
-           ['2.', '4'],
-           ['4', '2.'],
-         ]
+    R4Dict = { (4,1):[['4', '4', '4','4'],],
+
+                (4,2):[   ['4', '4', '4','4'],
+                        ['1'],
+                        ['2', '2'],
+                        ['2.', '4'],
+                        ['4', '2.'],
+                    ],
+              (3,1):[ ['4','4','4'],],
+              (3,2):[['4','4','4'],
+                     ['4', '2.'],
+                     ['2.','4']
+                    ],
+             }
 
     FORMAT_GRAND = '''\\version "2.16.2"
     {
     \\new PianoStaff
         <<
-        \\new Staff { \\time 4/4
+        \\new Staff { \\time %s/4
                         %s
                     }
         \\new Staff { \\clef "bass"
@@ -53,7 +61,7 @@ class SightGen:
     FORMAT_2TREBLE = '''\\version "2.16.2"
     {
     <<
-    \\new Staff { \\clef "treble" \\time 4/4
+    \\new Staff { \\clef "treble" \\time %s/4
                  %s
                 }
     \\new Staff { \\clef "treble"
@@ -62,24 +70,27 @@ class SightGen:
     >>
     }
     '''
-    def __init__(self, format='Grand', tRange=(0,4), bRange=(4,8), notes=16, barPerLine=4):
+    def __init__(self, format='Grand', tRange=(0,4), bRange=(4,8), notes=16, barPerLine=4,
+                 time=4, level=1):
         self.format = format
         self.tRange = tRange
         self.bRange = bRange
         self.numNotes = notes
         self.numBars = notes
         self.barPerLine = barPerLine
+        self.time = time
+        self.level = level
         random.seed(datetime.now())
 
     def printGrand(self):
-        print( SightGen.FORMAT_GRAND % (self.tNoteString, self.bNoteString))
+        print( SightGen.FORMAT_GRAND % (self.time, self.tNoteString, self.bNoteString))
 
     def print2Treble(self):
-        print( SightGen.FORMAT_2TREBLE % (self.tNoteString, self.bNoteString))
+        print( SightGen.FORMAT_2TREBLE % (self.time, self.tNoteString, self.bNoteString))
 
     def genNotes(self):
         # set the duration format list
-        tFormList = SightGen.R4
+        tFormList = SightGen.R4Dict[(self.time,self.level)]
         # generate the bar
         tBar, bBar = [], []
         # random generate bar during form for treble and bass
@@ -140,10 +151,12 @@ if __name__ == "__main__":
                    )
 
     parser.add_argument('-f', '--format', choices=['Grand','2Treble'], default='Grand')
-    parser.add_argument('-n', '--number', type=int, default=16)
+    parser.add_argument('-n', '--number', type=int, default=16, help="in number of bars")
     parser.add_argument('-T', '--Treble', nargs=2, type=int, default=(7,11))
     parser.add_argument('-B', '--Bass', nargs=2, type=int, default=(0,4))
-    parser.add_argument('-b', '--bar', type=int, default=4)
+    parser.add_argument('-b', '--bar', type=int, default=2, help="number of bar perline")
+    parser.add_argument('-t', '--time', type=int, choices=[3,4], default=4)
+    parser.add_argument('-l', '--level', type=int, default=1)
 
     parser.epilog='''
     Generate Random Notes In Lilypond
@@ -157,5 +170,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     gen = SightGen(format=args.format, tRange=args.Treble, bRange=args.Bass,  notes=args.number,
-            barPerLine=args.bar)
+            barPerLine=args.bar, time=args.time, level=args.level)
     gen.genSheet()
