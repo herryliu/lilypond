@@ -72,16 +72,57 @@ class SightGen:
     >>
     }
     '''
+
+    PROFILE = {
+        '1To5TwoTreble':[
+            '2Treble', #format
+            (21, 25),  #tRange
+            (14, 18),  #bRange
+            256,       #notes
+            0,         #barPerLine
+            4,         #time
+            1,         #level
+        ],
+        '1To5':[
+            'Grand', #format
+            (14, 18),  #tRange
+            ( 7, 11),  #bRange
+            256,       #notes
+            0,         #barPerLine
+            4,         #time
+            1,         #level
+        ],
+    }
     def __init__(self, format='Grand', tRange=(0,4), bRange=(4,8), notes=16, barPerLine=4,
-                 time=4, level=1):
-        self.format = format
-        self.tRange = tRange
-        self.bRange = bRange
-        self.numNotes = notes
-        self.numBars = notes
-        self.barPerLine = barPerLine
-        self.time = time
-        self.level = level
+                 time=4, level=1, Profile=None, profile=None):
+        if Profile == None and Profile == None:
+            self.format = format
+            self.tRange = tRange
+            self.bRange = bRange
+            self.numBars = notes
+            self.barPerLine = barPerLine
+            self.time = time
+            self.level = level
+
+        if type(Profile) == str:
+            self.format =     SightGen.PROFILE[Profile][0]
+            self.tRange =     SightGen.PROFILE[Profile][1]
+            self.bRange =     SightGen.PROFILE[Profile][2]
+            self.numBars =    SightGen.PROFILE[Profile][3]
+            self.barPerLine = SightGen.PROFILE[Profile][4]
+            self.time =       SightGen.PROFILE[Profile][5]
+            self.level =      SightGen.PROFILE[Profile][6]
+
+        if type(profile) == int:
+            p=SightGen.PROFILE.keys()[profile-1]
+            self.format =     SightGen.PROFILE[p][0]
+            self.tRange =     SightGen.PROFILE[p][1]
+            self.bRange =     SightGen.PROFILE[p][2]
+            self.numBars =    SightGen.PROFILE[p][3]
+            self.barPerLine = SightGen.PROFILE[p][4]
+            self.time =       SightGen.PROFILE[p][5]
+            self.level =      SightGen.PROFILE[p][6]
+
         random.seed(datetime.now())
 
     def printGrand(self):
@@ -111,7 +152,7 @@ class SightGen:
                 note = pitch + duration
                 tBarString = tBarString + note + ' '
             tBar.append(tBarString)
-            if barPreLine !=0 (k+1) % self.barPerLine == 0:
+            if self.barPerLine != 0 and (k+1) % self.barPerLine == 0:
                 tBar.append('\\break')
 
             # generate bass bar
@@ -122,7 +163,7 @@ class SightGen:
                 note = pitch + duration
                 bBarString = bBarString + note + ' '
             bBar.append(bBarString)
-            if (k+1) % self.barPerLine == 0:
+            if self.barPerLine != 0 and (k+1) % self.barPerLine == 0:
                 bBar.append('\\break')
         #print("tBar: %s" % tBar)
         #print("bBar: %s" % bBar)
@@ -159,6 +200,8 @@ if __name__ == "__main__":
     parser.add_argument('-b', '--bar', type=int, default=0, help="number of bar perline")
     parser.add_argument('-t', '--time', type=int, choices=[3,4], default=4)
     parser.add_argument('-l', '--level', type=int, default=1)
+    parser.add_argument('-p', '--profile', choices=range(1, len(SightGen.PROFILE)+1), type=int, default=None)
+    parser.add_argument('-P', '--Profile', choices=SightGen.PROFILE.keys(), default=None)
 
     parser.epilog='''
     Generate Random Notes In Lilypond
@@ -166,13 +209,15 @@ if __name__ == "__main__":
                    0  --> Lowest C (2 lines below Bass Clef) --> C2
                    14 --> Middle C --> C4
                    28 --> Highest C ( 2 lines above Treble Clef) --> C6
-                   (4 ,10) --> Bass Clef
+                   (4 ,12) --> Bass Clef
                    (16,24) --> Treble Clef
     Gen 1 ... 5 and 1'... 5'
     ./gen5.py -f 2Treble -B 14 18 -T 21 25 -t 4 -l 1 -n 256
+    ./gen5.py -p 1
+    ./gen5.py -P 1To5
                    '''
     args = parser.parse_args()
-
     gen = SightGen(format=args.format, tRange=args.Treble, bRange=args.Bass,  notes=args.number,
-            barPerLine=args.bar, time=args.time, level=args.level)
+            barPerLine=args.bar, time=args.time, level=args.level, Profile=args.Profile,
+                    profile=args.profile)
     gen.genSheet()
