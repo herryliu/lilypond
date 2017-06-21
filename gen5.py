@@ -79,7 +79,7 @@ class SightGen:
             (21, 25),  #tRange
             (14, 18),  #bRange
             256,       #notes
-            0,         #barPerLine
+            5,         #barPerLine
             4,         #time
             1,         #level
         ],
@@ -88,7 +88,7 @@ class SightGen:
             (14, 18),  #tRange
             ( 7, 11),  #bRange
             256,       #notes
-            0,         #barPerLine
+            5,         #barPerLine
             4,         #time
             1,         #level
         ],
