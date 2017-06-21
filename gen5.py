@@ -168,6 +168,8 @@ if __name__ == "__main__":
                    28 --> Highest C ( 2 lines above Treble Clef) --> C6
                    (4 ,10) --> Bass Clef
                    (16,24) --> Treble Clef
+    Gen 1 ... 5 and 1'... 5'
+    ./gen5.py -f 2Treble -B 14 18 -T 21 25 -t 4 -l 1 -n 256
                    '''
     args = parser.parse_args()
 
