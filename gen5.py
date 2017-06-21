@@ -111,7 +111,7 @@ class SightGen:
                 note = pitch + duration
                 tBarString = tBarString + note + ' '
             tBar.append(tBarString)
-            if (k+1) % self.barPerLine == 0:
+            if barPreLine !=0 (k+1) % self.barPerLine == 0:
                 tBar.append('\\break')
 
             # generate bass bar
@@ -156,7 +156,7 @@ if __name__ == "__main__":
     parser.add_argument('-n', '--number', type=int, default=16, help="in number of bars")
     parser.add_argument('-T', '--Treble', nargs=2, type=int, default=(7,11))
     parser.add_argument('-B', '--Bass', nargs=2, type=int, default=(0,4))
-    parser.add_argument('-b', '--bar', type=int, default=2, help="number of bar perline")
+    parser.add_argument('-b', '--bar', type=int, default=0, help="number of bar perline")
     parser.add_argument('-t', '--time', type=int, choices=[3,4], default=4)
     parser.add_argument('-l', '--level', type=int, default=1)
 
