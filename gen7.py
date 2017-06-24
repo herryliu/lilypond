@@ -132,13 +132,6 @@ class SightGen:
 
         random.seed(datetime.now())
 
-    def printGrand(self):
-        print( SightGen.FORMAT_GRAND % (self.time, self.tNoteString, self.bNoteString))
-
-    def print2Treble(self):
-        print( SightGen.FORMAT_2TREBLE % (self.time, self.tNoteString, self.bNoteString))
-
-
     def genClef(self, clef):
 
         # get the clif range
@@ -178,6 +171,12 @@ class SightGen:
         self.tNoteString = ' '.join(self.tBar)
         self.bNoteString = ' '.join(self.bBar)
 
+    def printGrand(self):
+        print( SightGen.FORMAT_GRAND % (self.time, self.tNoteString, self.bNoteString))
+
+    def print2Treble(self):
+        print( SightGen.FORMAT_2TREBLE % (self.time, self.tNoteString, self.bNoteString))
+
     def genSheet(self):
         self.genNotes()
         if self.format == '2Treble':
@@ -203,14 +202,16 @@ if __name__ == "__main__":
 
     parser.add_argument('-f', '--format', choices=['Grand','2Treble'], default='Grand')
     parser.add_argument('-n', '--number', type=int, default=16, help="in number of bars")
-    parser.add_argument('-T', '--Treble', nargs=2, type=int, default=(7,11))
-    parser.add_argument('-B', '--Bass', nargs=2, type=int, default=(0,4))
+    parser.add_argument('-T', '--Treble', nargs=2, type=int, default=(7,11), help='treble clef notes range, defaulti (7,11)')
+    parser.add_argument('-B', '--Bass', nargs=2, type=int, default=(0,4), help='bass clef notes range, default (0,4)')
     parser.add_argument('-b', '--bar', type=int, default=0, help="number of bar perline")
-    parser.add_argument('-t', '--time', type=int, choices=[3,4], default=4)
-    parser.add_argument('-l', '--level', type=int, default=1)
-    parser.add_argument('-p', '--profile', choices=range(1, len(SightGen.PROFILE)+1), type=int, default=None)
-    parser.add_argument('-P', '--Profile', choices=SightGen.PROFILE.keys(), default=None)
-    parser.add_argument('-u', '--unique', action='store_true', default=False)
+    parser.add_argument('-t', '--time', type=int, choices=[3,4], default=4, help='beats per bar')
+    parser.add_argument('-l', '--level', type=int, default=1, help='difficult level')
+    parser.add_argument('-p', '--profile', choices=range(1, len(SightGen.PROFILE)+1), type=int, default=None,
+            help='pick profile by number')
+    parser.add_argument('-P', '--Profile', choices=SightGen.PROFILE.keys(), default=None,
+            help='pick pofile by name')
+    parser.add_argument('-u', '--unique', action='store_true', default=False, help='make adjecent notes different')
 
     parser.epilog='''
     Generate Random Notes In Lilypond
@@ -221,9 +222,9 @@ if __name__ == "__main__":
                    (4 ,12) --> Bass Clef
                    (16,24) --> Treble Clef
     Gen 1 ... 5 and 1'... 5'
-    ./gen5.py -f 2Treble -B 14 18 -T 21 25 -t 4 -l 1 -n 256
-    ./gen5.py -p 1
-    ./gen5.py -P 1To5
+    ./gen7.py -f 2Treble -B 14 18 -T 21 25 -t 4 -l 1 -n 256
+    ./gen7.py -p 1
+    ./gen7.py -P 1To5
                    '''
     args = parser.parse_args()
     gen = SightGen(format=args.format, tRange=args.Treble, bRange=args.Bass,  notes=args.number,
