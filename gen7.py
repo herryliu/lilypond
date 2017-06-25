@@ -29,21 +29,28 @@ class SightGen:
         "c'", "d'", "e'", "f'", "g'", "a'", "b'",
         "c''", "d''", "e''", "f''", "g''", "a''", "b''"]
 
-    R4Dict = {(4,1):[['4', '4', '4','4'],],
+    R4Dict = {
+            # 1/4 notes only
+            (4,1):[['4', '4', '4','4'],],
 
-              (4,2):[['4', '4', '4','4'],
-                     ['1'],
-                     ['2', '2'],
-                     ['2.', '4'],
-                     ['4', '2.'],
-                    ],
+            # 4x 1/4, 1x 1, 2x 1/2, 1x 3/4 + 1x 1/4, 1x 1/4 + 1* 3/4
+            (4,2):[['4', '4', '4','4'],
+                    ['1'],
+                    ['2', '2'],
+                    ['2.', '4'],
+                    ['4', '2.'],
+                ],
+            # 1/4 notes only
+            (4,3):[['1'],],
+            # 1/2 + 1/2 notes only
+            (4,4):[['2','2'],],
 
-              (3,1):[['4','4','4'],],
+            (3,1):[['4','4','4'],],
 
-              (3,2):[['4','4','4'],
-                     ['4', '2.'],
-                     ['2.','4']
-                    ],
+            (3,2):[['4','4','4'],
+                    ['4', '2.'],
+                    ['2.','4']
+                ],
              }
 
     FORMAT_GRAND = '''\\version "2.16.2"
@@ -81,7 +88,7 @@ class SightGen:
             256,       #notes
             5,         #barPerLine
             4,         #time
-            1,         #level
+            (1,1),         #level
         ],
         '1To5':[
             'Grand', #format
@@ -90,11 +97,11 @@ class SightGen:
             256,       #notes
             5,         #barPerLine
             4,         #time
-            1,         #level
+            (1,1),         #level
         ],
     }
     def __init__(self, format='Grand', tRange=(0,4), bRange=(4,8), notes=16, barPerLine=4,
-                 time=4, level=1, Profile=None, profile=None, differentNote=False):
+                 time=4, level=(1,1), Profile=None, profile=None, differentNote=False):
 
         #List hold bars of each clef
         self.tBar, self.bBar = [], []
@@ -135,13 +142,14 @@ class SightGen:
     def genClef(self, clef):
 
         # get the clif range
+        # set the duration format list
         if clef == self.tBar:
             clefRange = self.tRange
+            tFormList = SightGen.R4Dict[(self.time, self.level[0])]
         else:
             clefRange = self.bRange
+            tFormList = SightGen.R4Dict[(self.time, self.level[1])]
 
-        # set the duration format list
-        tFormList = SightGen.R4Dict[(self.time,self.level)]
 
         random.seed(datetime.now())
         lastPitch = None
@@ -206,7 +214,7 @@ if __name__ == "__main__":
     parser.add_argument('-B', '--Bass', nargs=2, type=int, default=(0,4), help='bass clef notes range, default (0,4)')
     parser.add_argument('-b', '--bar', type=int, default=0, help="number of bar perline")
     parser.add_argument('-t', '--time', type=int, choices=[3,4], default=4, help='beats per bar')
-    parser.add_argument('-l', '--level', type=int, default=1, help='difficult level')
+    parser.add_argument('-l', '--level', nargs=2, type=int, default=[1,1], help='difficult level for treble and bass clif')
     parser.add_argument('-p', '--profile', choices=range(1, len(SightGen.PROFILE)+1), type=int, default=None,
             help='pick profile by number')
     parser.add_argument('-P', '--Profile', choices=SightGen.PROFILE.keys(), default=None,
@@ -222,7 +230,7 @@ if __name__ == "__main__":
                    (4 ,12) --> Bass Clef
                    (16,24) --> Treble Clef
     Gen 1 ... 5 and 1'... 5'
-    ./gen7.py -f 2Treble -B 14 18 -T 21 25 -t 4 -l 1 -n 256
+    ./gen7.py -f 2Treble -B 14 18 -T 21 25 -t 4 -l 1 1 -n 256
     ./gen7.py -p 1
     ./gen7.py -P 1To5
                    '''
