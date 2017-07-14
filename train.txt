@@ -1,6 +1,6 @@
 sr1: B: 3,4,5 T: 1,2,3 / unique
-./gen7.py -f 2Treble -B 16 18 -T 21 23 -t 4 -l 1 1 -n 128 -b 4 -u > sr1.ly
+./gen8.py -f 2Treble -B 16 18 -T 21 23 -t 4 -l 1 1 -n 128 -b 4 -u > sr1.ly
 sr2: B: 1,2,3 T:3,4,5 / unique
-./gen7.py -f 2Treble -B 14 16 -T 23 25 -t 4 -l 1 1 -n 128 -b 4 -u > sr2.ly
+./gen8.py -f 2Treble -B 14 16 -T 23 25 -t 4 -l 1 1 -n 128 -b 4 -u > sr2.ly
 sr3: B: 1,2,3,4,5 T: 1,2,3,4,5
-./gen7.py -f 2Treble -B 14 18 -T 23 27 -t 4 -l 1 1 -n 128 -b 4 -u > sr3.ly
+./gen8.py -f 2Treble -B 14 18 -T 21 25 -t 4 -l 1 1 -n 128 -b 4 -u > sr3.ly

@@ -62,42 +62,64 @@ class SightGen:
                 ],
              }
 
+    FORMAT_HEADER = r'''
+    #(set-default-paper-size "a4" 'landscape)
+    #(set-global-staff-size 30)
+    \score
+    '''
+    FORMAT_FOOTER = r'''
+    \layout {
+        \context {
+            \Score
+            \override SpacingSpanner #'base-shortest-duration = #(ly:make-moment 1 16)
+        }
+    }
+    '''
+
     FORMAT_GRAND = '''\\version "2.16.2"
+    %s
     {
     \\new PianoStaff
         <<
-        \\new Staff { \\time %s/4
-                        %s
+        \\new Staff { \\time %%s/4
+                        %%s
                     }
         \\new Staff { \\clef "bass"
-                        %s
+                        %%s
                     }
         >>
+    %s
     }
-    '''
+    ''' % (FORMAT_HEADER, FORMAT_FOOTER)
 
     FORMAT_2TREBLE = '''\\version "2.16.2"
+    %s
     {
     <<
-    \\new Staff { \\clef "treble" \\time %s/4
-                 %s
+    \\new Staff { \\clef "treble" \\time %%s/4
+                 %%s
                 }
     \\new Staff { \\clef "treble"
-                 %s
+                 %%s
                 }
     >>
+    %s
     }
-    '''
+    ''' % (FORMAT_HEADER, FORMAT_FOOTER)
+
 
     FORMAT_BEATS = '''\\version "2.16.2"
+    %s
     {
     <<
-    \\new Staff { \\clef "treble" \\time %s/4
-                 %s
+    \\new Staff { \\clef "treble" \\time \%%s/4
+                 %%s
                 }
     >>
+    %s
     }
-    '''
+    ''' % (FORMAT_HEADER, FORMAT_FOOTER)
+
 
     PROFILE = {
         '1To5TwoTreble':[
@@ -210,7 +232,7 @@ class SightGen:
             barString = ''
             for i in range(0, len(tForm)):
                 # get random tNote
-                pitch = "b'" 
+                pitch = "b'"
                 lastPitch = pitch
                 duration = tForm[i]
                 note = pitch + duration
